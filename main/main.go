@@ -1,10 +1,15 @@
 package main
 
 import (
-	"github.com/vcollado/go-todo-list/task"
+	tasks "github.com/vcollado/go-todo-list/tasks"
+	types "github.com/vcollado/go-todo-list/types"
 )
 
 func main() {
 
-	task.CreateTask("task 1", "foo")
+	var task types.Task
+
+	task = tasks.NewTransientTask("name 2", "description 2")
+
+	println(task.IsStored())
 }
