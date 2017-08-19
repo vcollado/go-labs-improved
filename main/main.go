@@ -1,30 +1,54 @@
 package main
 
 import (
+	"fmt"
+	"runtime"
+	"sync"
+	"time"
+
 	"github.com/vcollado/go-todo-list/tasks"
 	"github.com/vcollado/go-todo-list/types"
 )
 
+const goMaxProcs int = 2
+
 func main() {
 
-	var task1, task2, task3, defaultTask types.Task
+	runtime.GOMAXPROCS(goMaxProcs)
 
-	task1 = tasks.NewTransientTask("this is the first task", "foo")
-	task2 = tasks.NewTransientTask("this is the second task", "baz")
-	task3 = tasks.NewTransientTask("this is the third task", "bas")
-	defaultTask = tasks.NewTransientTask("this is the default task", "fus")
+	var task1, task2, task3, task4 types.Task
 
-	var defaultTaskGroup = []types.Task{defaultTask}
-	var taskGroup1 = []types.Task{task2, task3}
+	task1 = tasks.NewTransientTask("foo", "this is the first task")
+	task2 = tasks.NewTransientTask("baz", "this is the second task")
+	task3 = tasks.NewTransientTask("bas", "this is the third task")
+	task4 = tasks.NewTransientTask("bar", "this is the fourth task")
+
+	tasksGroup := []types.Task{task3, task4}
+
+	addTaskChannel := make(chan types.Task)
+	addTasksChannel := make(chan []types.Task)
+
+	var wg sync.WaitGroup
 
 	var taskHandler types.TaskHandler
+	taskHandler = tasks.NewTaskHandlerOverChannels(
+		&wg,
+		addTaskChannel,
+		addTasksChannel,
+	)
 
-	taskHandler = tasks.NewTaskHandler(defaultTaskGroup...)
-	taskHandler.AddTask(task1)
-	taskHandler.AddTasks(taskGroup1)
+	addTaskChannel <- task1
+	addTaskChannel <- task2
+	addTasksChannel <- tasksGroup
 
+	// wait for the goroutines to finish
+	time.Sleep(time.Second * 2)
+	wg.Wait()
+
+	println("taskHandler total tasks: ", len(taskHandler.Tasks()))
 	for _, task := range taskHandler.Tasks() {
-		println(task.IsStored())
+		fmt.Printf("%+v\n", task)
 	}
 
+	fmt.Printf("main finished")
 }
