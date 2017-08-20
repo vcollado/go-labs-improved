@@ -18,5 +18,7 @@ type TaskHandler interface {
 	AddTask(taskToAdd Task)
 	AddTasks(tasksToAdd []Task)
 	EditTask(taskToEdit Task, pos int)
+	RemoveTask(pos int)
 	Tasks() []Task
+	SetTasks(tasks []Task)
 }
