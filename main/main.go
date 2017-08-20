@@ -16,10 +16,10 @@ func main() {
 
 	runtime.GOMAXPROCS(goMaxProcs)
 
-	var task0 types.Task = tasks.NewTransientTask("foo", "this is the first task")
-	var task1 types.Task = tasks.NewTransientTask("baz", "this is the second task")
-	var task2 types.Task = tasks.NewTransientTask("bas", "this is the third task")
-	var task3 types.Task = tasks.NewTransientTask("bar", "this is the fourth task")
+	var task0 types.Task = tasks.NewTransientTask("foo", "this is the zero task")
+	var task1 types.Task = tasks.NewTransientTask("baz", "this is the first task")
+	var task2 types.Task = tasks.NewTransientTask("bas", "this is the second task")
+	var task3 types.Task = tasks.NewTransientTask("bar", "this is the third task")
 	// var task5 types.TransientTask = tasks.NewTransientTask("fus", "this is the fifth task")
 
 	// var task6 types.Task
@@ -43,18 +43,13 @@ func main() {
 	addTaskChannel <- task1
 	addTasksChannel <- tasksGroup
 
-	time.Sleep(time.Second)
+	time.Sleep(time.Second * 3)
 	wg.Wait()
-
-	println("taskHandler total tasks: ", len(taskHandler.Tasks()))
 
 	task2.SetDescription("edited description")
 	taskHandler.EditTask(task2, 2)
-	// fmt.Printf("%+v\n", taskHandler.Tasks()[3])
+	taskHandler.RemoveTask(0)
 
-	for _, task := range taskHandler.Tasks() {
-		fmt.Printf("%+v\n", task)
-	}
-
+	println("taskHandler total tasks: ", len(taskHandler.Tasks()))
 	fmt.Printf("main finished")
 }

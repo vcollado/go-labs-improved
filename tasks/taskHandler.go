@@ -74,7 +74,17 @@ func (taskHandler *TaskHandler) EditTask(taskToEdit types.Task, pos int) {
 	mergo.Merge(taskToEdit, taskHandler.Tasks()[pos])
 }
 
+// RemoveTask from the task list
+func (taskHandler *TaskHandler) RemoveTask(pos int) {
+	taskHandler.SetTasks(append(taskHandler.Tasks()[:pos], taskHandler.Tasks()[pos+1:]...))
+}
+
 // Tasks of the tasksHandler
-func (taskHandler TaskHandler) Tasks() []types.Task {
+func (taskHandler *TaskHandler) Tasks() []types.Task {
 	return taskHandler.tasks
+}
+
+// SetTasks of the taskhandler
+func (taskHandler *TaskHandler) SetTasks(tasks []types.Task) {
+	taskHandler.tasks = tasks
 }
