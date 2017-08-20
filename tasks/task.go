@@ -2,10 +2,21 @@ package tasks
 
 // Task keeps the basic information
 type Task struct {
-	Name, Description string
+	name, description string
+	stored            bool
 }
 
-// IsStored checks if the task is stored
-func (t *Task) IsStored() bool {
-	return true
+// NewTask creates a new task with its basic configuration
+func NewTask(name string, description string) *Task {
+	return &Task{name, description, false}
+}
+
+// Name of the task
+func (t Task) Name() string {
+	return t.name
+}
+
+// Description of the task
+func (t Task) Description() string {
+	return t.description
 }
