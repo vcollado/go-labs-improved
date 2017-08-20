@@ -20,3 +20,8 @@ func (t Task) Name() string {
 func (t Task) Description() string {
 	return t.description
 }
+
+// SetDescription of the task
+func (t *Task) SetDescription(description string) {
+	t.description = description
+}

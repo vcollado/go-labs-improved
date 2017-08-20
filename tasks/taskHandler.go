@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/imdario/mergo"
 	"github.com/vcollado/go-todo-list/types"
 )
 
@@ -66,6 +67,11 @@ func (taskHandler *TaskHandler) AddTasks(tasksToAdd []types.Task) {
 	for _, task := range tasksToAdd {
 		taskHandler.AddTask(task)
 	}
+}
+
+// EditTask of the task list by merging given a position
+func (taskHandler *TaskHandler) EditTask(taskToEdit types.Task, pos int) {
+	mergo.Merge(taskToEdit, taskHandler.Tasks()[pos])
 }
 
 // Tasks of the tasksHandler

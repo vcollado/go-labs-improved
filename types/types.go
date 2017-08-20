@@ -4,6 +4,7 @@ package types
 type Task interface {
 	Name() string
 	Description() string
+	SetDescription(description string)
 }
 
 // TransientTask is a task in memory
@@ -16,5 +17,6 @@ type TransientTask interface {
 type TaskHandler interface {
 	AddTask(taskToAdd Task)
 	AddTasks(tasksToAdd []Task)
+	EditTask(taskToEdit Task, pos int)
 	Tasks() []Task
 }
