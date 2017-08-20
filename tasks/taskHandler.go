@@ -1,7 +1,9 @@
 package tasks
 
 import (
+	"fmt"
 	"sync"
+	"time"
 
 	"github.com/vcollado/go-todo-list/types"
 )
@@ -27,8 +29,10 @@ func NewTaskHandlerOverChannels(
 	go func(addTaskCh chan types.Task) {
 		for task := range addTaskCh {
 			wg.Add(1)
-			taskHandler.AddTask(task)
-			wg.Done()
+			go func(task types.Task) {
+				taskHandler.AddTask(task)
+				wg.Done()
+			}(task)
 		}
 	}(addTaskCh)
 
@@ -53,6 +57,7 @@ func (taskHandler *TaskHandler) AddTask(taskToAdd types.Task) {
 	if len(taskHandler.tasks) == 0 {
 		taskHandler.tasks = make([]types.Task, 0)
 	}
+	fmt.Println(time.Now().String())
 	taskHandler.tasks = append(taskHandler.tasks, taskToAdd)
 }
 
